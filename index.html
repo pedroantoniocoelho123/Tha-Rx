@@ -1061,7 +1061,7 @@ function renderCasos(){const el=$('#v-casos');
   ${casos.length?`<div class="chips" style="margin-bottom:10px"><button data-ef="" aria-pressed="${!casoFiltro}">Todos (${casos.length})</button>${[...new Set(casos.map(c=>c.exame))].map(x=>`<button data-ef="${esc(x)}" aria-pressed="${casoFiltro===x}">${esc(x)}</button>`).join('')}</div>`:''}
   <div class="gal">${ls.map(c=>`<button class="case" data-cs="${esc(c.id)}"><img alt="${esc(c.titulo)}" src="${urlOf(c)}"><span>${esc(c.titulo)}<small>${esc(c.exame)} · ${esc(fmtDate(c.criado.slice(0,10)))}</small></span></button>`).join('')}</div>
   ${casosOk&&!casos.length?`<div class="okbox" style="margin-top:10px">Nenhum caso ainda. Guarde aqui imagens anonimizadas que ensinaram algo: um posicionamento difícil, um achado, um artefato.</div>`:''}
-  <div class="sec" style="margin-top:18px"><h3>Backup</h3><p class="sub" style="margin-top:6px">Baixe um arquivo com seus cards, estudos, meta e casos (com as imagens). Salve no app Arquivos (iCloud Drive) ou mande para o seu e-mail. Se trocar de celular ou os dados sumirem, é só restaurar.</p>
+  <div class="sec" style="margin-top:18px"><h3>Backup</h3><p class="sub" style="margin-top:6px">Baixe um arquivo com seus cards, estudos, meta e casos (com as imagens). Salve no Google Drive, no app Arquivos ou mande para o seu e-mail. Se trocar de celular ou os dados sumirem, é só restaurar.</p>
     <p class="note">${D('perfil').backup?'Último backup: '+esc(fmtDate(D('perfil').backup)):'Nenhum backup feito ainda.'}</p>
     <div class="grid2" style="margin-top:10px"><button class="btn pri" id="bk-dl">Baixar backup</button><label class="btn" for="bk-in" style="cursor:pointer">Restaurar backup</label></div><input id="bk-in" type="file" accept=".json,application/json" hidden>
     <div class="confirm" id="bk-cf" hidden><span style="flex:1">Restaurar substitui os estudos e a meta atuais. Os casos são somados. Continuar?</span><button class="btn sm" id="bk-no">Cancelar</button><button class="btn sm dng" id="bk-yes">Restaurar</button></div></div>`;
@@ -1078,7 +1078,7 @@ function novoCaso(){
    <div class="grid2"><label class="btn" for="c-file">Galeria</label><label class="btn" for="c-cam">Câmera</label></div>
    <input id="c-file" class="vh" type="file" accept="image/*"><input id="c-cam" class="vh" type="file" accept="image/*" capture="environment">
    <div class="paste" id="c-paste" contenteditable="true" role="textbox" aria-label="Colar imagem">Copiou a imagem? Toque aqui e escolha Colar.</div>
-   <p class="note" id="c-hint">Se a galeria não abrir, confira nos Ajustes do iPhone se o acesso às fotos está liberado.</p></div>
+   <p class="note" id="c-hint">Se a galeria não abrir, confira nas configurações do celular se o acesso às fotos está liberado.</p></div>
   <div id="c-ed" hidden><p class="sub" style="font-size:14px;margin-bottom:6px">2. Passe o dedo sobre nomes e números para cobrir com uma tarja preta.</p>
   <div class="edit"><canvas id="c-cv"></canvas></div>
   <div class="grid2" style="margin-top:8px"><button class="btn sm" id="c-undo">Desfazer tarja</button><button class="btn sm" id="c-rot">Girar 90°</button></div>
@@ -1207,7 +1207,7 @@ async function fazerBackup(){const btn=$('#bk-dl');
   btn.disabled=true;try{const cs=[];for(const c of casos)cs.push({id:c.id,titulo:c.titulo,exame:c.exame,tags:c.tags,nota:c.nota,criado:c.criado,img:await blobToData(c.img)});
     const json=JSON.stringify({app:'corte-fino',versao:1,criado:new Date().toISOString(),dados:S.data,casos:cs});
     const como=await salvarArquivo(`thais-rx-backup-${today()}.json`,new Blob([json],{type:'application/json'}));
-    D('perfil').backup=today();save('perfil');toast(como==='share'?'Backup pronto. Guarde em Arquivos ou mande para o seu e-mail.':'Backup baixado. Guarde o arquivo em local seguro.');render()}
+    D('perfil').backup=today();save('perfil');toast(como==='share'?'Backup pronto. Guarde no Drive, em Arquivos ou mande para o seu e-mail.':'Backup baixado. Guarde o arquivo em local seguro.');render()}
   catch(e){toast(e?.name==='AbortError'?'Backup cancelado.':'Não foi possível criar o backup agora.')}
   finally{if($('#bk-dl'))$('#bk-dl').disabled=false}}
 async function restaurar(file){try{const o=JSON.parse(await file.text());if(!o||o.app!=='corte-fino'||typeof o.dados!=='object')throw 0;
@@ -1852,20 +1852,20 @@ addEventListener('scroll',()=>$('#appbar').classList.toggle('sc',scrollY>4),{pas
 <style>
 .ins{position:fixed;inset:0;z-index:50;background:rgba(4,10,18,.72);display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 .ins[hidden]{display:none}
-.ins-c{width:100%;max-width:440px;background:#0f1b25;border:1px solid #23384b;border-radius:22px;padding:20px 18px 16px;color:#e6eef5;box-shadow:0 20px 60px rgba(0,0,0,.5);max-height:calc(100vh - 24px);overflow:auto}
+.ins-c{width:100%;max-width:440px;background:#211041;border:1px solid #46317a;border-radius:22px;padding:20px 18px 16px;color:#e6eef5;box-shadow:0 20px 60px rgba(0,0,0,.5);max-height:calc(100vh - 24px);overflow:auto}
 .ins-h{display:flex;gap:14px;align-items:center}
 .ins-h svg{width:60px;height:60px;border-radius:14px;flex:none}
 .ins-h b{font:800 22px/1.15 Archivo,system-ui,sans-serif;font-stretch:80%}
-.ins-h small{display:block;color:#9aabb9;font-size:14px;margin-top:4px;line-height:1.35}
+.ins-h small{display:block;color:#fff;font-size:14px;margin-top:4px;line-height:1.35}
 .ins ol{list-style:none;margin:16px 0 4px;padding:0;display:grid;gap:10px}
-.ins li{display:flex;gap:12px;align-items:center;background:#132230;border:1px solid #1f3446;border-radius:14px;padding:12px}
+.ins li{display:flex;gap:12px;align-items:center;background:#2a1650;border:1px solid #46317a;border-radius:14px;padding:12px}
 .ins li .n{font-style:normal;width:28px;height:28px;border-radius:50%;background:#ffcc29;color:#0e1a26;font-weight:800;display:grid;place-items:center;flex:none}
 .ins li span{font-size:16px;line-height:1.35}
 .ins .k{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:30px;height:30px;padding:0 6px;border-radius:8px;background:#e6eef5;color:#0e1a26;font-weight:800;margin:0 2px}
 .ins .k svg{width:18px;height:18px}
-.ins .nt{color:#9aabb9;font-size:13px;line-height:1.4;margin-top:10px}
+.ins .nt{color:#fff;font-size:13px;line-height:1.4;margin-top:10px}
 .ins .bt{display:grid;gap:8px;margin-top:14px}
-.ins button{min-height:46px;border-radius:12px;font:600 16px Archivo,system-ui,sans-serif;border:1px solid #2a3d52;background:none;color:#e6eef5}
+.ins button{min-height:46px;border-radius:12px;font:600 16px Archivo,system-ui,sans-serif;border:1px solid #6a4fa3;background:none;color:#fff}
 .ins button.p{background:#ffcc29;border-color:#ffcc29;color:#0e1a26}
 </style>
 <div class="ins" id="ins" hidden role="dialog" aria-modal="true" aria-labelledby="insT"><div class="ins-c" id="insC"></div></div>
@@ -1873,7 +1873,10 @@ addEventListener('scroll',()=>$('#appbar').classList.toggle('sc',scrollY>4),{pas
 (function(){
   const ua=navigator.userAgent,ios=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   const inst=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
-  if(!ios||inst)return;
+  const android=/Android/i.test(ua);
+  if((!ios&&!android)||inst)return;
+  let pedido=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();pedido=e;const b=document.getElementById('insGo');if(b){b.hidden=false}});
+  addEventListener('appinstalled',()=>{const x=document.getElementById('ins');if(x)x.hidden=true});
   let skip=0;try{skip=+localStorage.getItem('cortefino:insSkip')||0}catch(e){}
   if(Date.now()-skip<3*864e5)return;
   const inApp=/Instagram|FBAN|FBAV|Line\/|WhatsApp|GSA\//.test(ua),notSafari=/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
@@ -1881,7 +1884,25 @@ addEventListener('scroll',()=>$('#appbar').classList.toggle('sc',scrollY>4),{pas
   const share='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg>';
   const plus='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
   const c=document.getElementById('insC'),box=document.getElementById('ins');
-  if(inApp||notSafari){
+  if(android){
+    const webview=/; wv\)|Instagram|FBAN|FBAV|Line\/|WhatsApp/.test(ua);
+    if(webview){
+      c.innerHTML=`<div class="ins-h">${ic}<div><b id="insT">Abra no Chrome para instalar</b><small>O Thaís Rx vira app na tela do celular pelo Chrome.</small></div></div>
+      <ol><li><i class="n">1</i><span>Toque em <b>Copiar link</b> aqui embaixo.</span></li><li><i class="n">2</i><span>Abra o <b>Chrome</b>, toque na barra de endereço e cole.</span></li></ol>
+      <div class="bt"><button class="p" id="insCp">Copiar link</button><button id="insNo">Agora não</button></div>`;
+      document.getElementById('insCp').onclick=async()=>{try{await navigator.clipboard.writeText(location.href.split('#')[0]);document.getElementById('insCp').textContent='Link copiado ✓'}catch(e){prompt('Copie o link:',location.href.split('#')[0])}};
+    }else{
+      c.innerHTML=`<div class="ins-h">${ic}<div><b id="insT">Instale o Thaís Rx</b><small>Ele fica na tela inicial e abre como app, até sem internet.</small></div></div>
+      <div class="bt"><button class="p" id="insGo" ${pedido?'':'hidden'}>Instalar agora</button></div>
+      <p class="nt" style="margin-top:12px">Se o botão não aparecer, instale pelo menu do Chrome:</p>
+      <ol><li><i class="n">1</i><span>Toque em <span class="k">⋮</span> no canto de cima do Chrome.</span></li>
+      <li><i class="n">2</i><span>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</span></li>
+      <li><i class="n">3</i><span>Toque em <b>Instalar</b>. Pronto!</span></li></ol>
+      <p class="nt">Seus dados continuam os mesmos no app instalado.</p>
+      <div class="bt"><button id="insNo">Agora não</button></div>`;
+      document.getElementById('insGo').onclick=async()=>{if(!pedido)return;pedido.prompt();let r=null;try{r=await pedido.userChoice}catch(e){}pedido=null;if(r&&r.outcome==='accepted')box.hidden=true;else document.getElementById('insGo').hidden=true};
+    }
+  }else if(inApp||notSafari){
     c.innerHTML=`<div class="ins-h">${ic}<div><b id="insT">Abra no Safari para instalar</b><small>O Thaís Rx só vira app na tela do iPhone pelo Safari.</small></div></div>
     <ol><li><i class="n">1</i><span>Toque em <b>Copiar link</b> aqui embaixo.</span></li><li><i class="n">2</i><span>Abra o <b>Safari</b>, toque na barra de endereço e cole.</span></li></ol>
     <div class="bt"><button class="p" id="insCp">Copiar link</button><button id="insNo">Agora não</button></div>`;
@@ -1935,7 +1956,7 @@ addEventListener('scroll',()=>$('#appbar').classList.toggle('sc',scrollY>4),{pas
    ['🎓','Estudar','Tudo para aprender e fixar, em quatro abas:',['<b>Aulas:</b> trilhas de 3 minutos com 3 perguntas no final','<b>Prática:</b> registre o plantão e crie cards à mão ou com uma IA','<b>Revisar:</b> flashcards que voltam na hora certa para não esquecer','<b>Quiz:</b> por tema, com o seu ponto fraco destacado']],
    ['🦴','Corpo','Um atlas do corpo humano para estudar anatomia.',['Toque num osso ou órgão para ver o que é e <b>como aparece nos exames</b>','Use o <b>zoom</b> para as estruturas pequenas','<b>Desafio:</b> ache 10 estruturas e bata o seu recorde','<b>Cortes de TC:</b> treine a anatomia nos cortes']],
    ['🔍','Consulta','Para consultar no dia a dia.',['<b>Simulador de TC:</b> arraste a imagem para mudar a janela','<b>Janelas prontas</b> de cérebro, pulmão, osso, abdome e outras','Referências rápidas e fontes confiáveis da área']],
-   ['📁','Casos','Guarde imagens que te ensinaram algo.',['Salve casos <b>com tarja</b> sobre os dados do paciente','Ajuste brilho e contraste para estudar a imagem','<b>Backup:</b> salve um arquivo com tudo do app no app Arquivos']],
+   ['📁','Casos','Guarde imagens que te ensinaram algo.',['Salve casos <b>com tarja</b> sobre os dados do paciente','Ajuste brilho e contraste para estudar a imagem','<b>Backup:</b> salve um arquivo com tudo do app no celular ou na nuvem']],
    ['🎯','Meta','O seu próximo passo na carreira.',['Escolha o curso, como <b>Biomedicina</b>, e siga o passo a passo','<b>Compare faculdades</b> por preço, horário e nota do MEC','<b>Agenda da área:</b> congressos de TC, RM e mais, com o botão <b>Quero ir</b>']],
    ['✨','Tudo pronto!','Algumas dicas para começar bem:',['Seus dados ficam <b>só neste celular</b>: faça um backup de vez em quando em Casos','Cumpra as missões do dia para ganhar XP e conquistas','Para ver este manual de novo, toque no nome <b>Thaís Rx</b> lá no topo']]];
   const box=document.getElementById('tour'),body=document.getElementById('tourBody'),dots=document.getElementById('tourDots'),prev=document.getElementById('tourPrev'),next=document.getElementById('tourNext');let i=0;
