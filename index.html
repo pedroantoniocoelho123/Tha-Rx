@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1d0f36">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -318,6 +319,8 @@ body{background:radial-gradient(120% 60% at 50% -10%,#4a2386 0%,var(--bg) 60%) f
 .agh .aghl{color:#fff}.aghk{color:#fff}
 .btn.pri,.btn.pri *,.nav a[aria-current=page] svg{color:#0e1a26}
 .brand{cursor:pointer}
+
+:root,:root[data-theme]{color-scheme:dark}
 </style>
 </head>
 <body>
@@ -1892,14 +1895,21 @@ addEventListener('scroll',()=>$('#appbar').classList.toggle('sc',scrollY>4),{pas
       <div class="bt"><button class="p" id="insCp">Copiar link</button><button id="insNo">Agora não</button></div>`;
       document.getElementById('insCp').onclick=async()=>{try{await navigator.clipboard.writeText(location.href.split('#')[0]);document.getElementById('insCp').textContent='Link copiado ✓'}catch(e){prompt('Copie o link:',location.href.split('#')[0])}};
     }else{
+      const sam=/SamsungBrowser/.test(ua);
+      const passos=sam?`<li><i class="n">1</i><span>Toque em <span class="k">≡</span> no canto de baixo do navegador.</span></li>
+      <li><i class="n">2</i><span>Toque em <b>Adicionar página a</b> e depois em <b>Tela inicial</b>. Se aparecer um ícone de instalar na barra de endereço, pode tocar nele.</span></li>
+      <li><i class="n">3</i><span>Toque em <b>Adicionar</b> ou <b>Instalar</b>. Pronto!</span></li>`
+      :`<li><i class="n">1</i><span>Toque em <span class="k">⋮</span> no canto de cima do Chrome.</span></li>
+      <li><i class="n">2</i><span>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</span></li>
+      <li><i class="n">3</i><span>Toque em <b>Instalar</b>. Pronto!</span></li>`;
       c.innerHTML=`<div class="ins-h">${ic}<div><b id="insT">Instale o Thaís Rx</b><small>Ele fica na tela inicial e abre como app, até sem internet.</small></div></div>
       <div class="bt"><button class="p" id="insGo" ${pedido?'':'hidden'}>Instalar agora</button></div>
-      <p class="nt" style="margin-top:12px">Se o botão não aparecer, instale pelo menu do Chrome:</p>
-      <ol><li><i class="n">1</i><span>Toque em <span class="k">⋮</span> no canto de cima do Chrome.</span></li>
-      <li><i class="n">2</i><span>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</span></li>
-      <li><i class="n">3</i><span>Toque em <b>Instalar</b>. Pronto!</span></li></ol>
+      <p class="nt" style="margin-top:12px"><b>Abriu por outro app</b> (WhatsApp, GitHub)? Primeiro toque no menu e em <b>Abrir no Chrome</b> ou <b>Abrir no Samsung Browser</b>.</p>
+      <p class="nt">Depois, instale pelo menu do navegador:</p>
+      <ol>${passos}</ol>
       <p class="nt">Seus dados continuam os mesmos no app instalado.</p>
-      <div class="bt"><button id="insNo">Agora não</button></div>`;
+      <div class="bt"><button id="insCp">Copiar link</button><button id="insNo">Agora não</button></div>`;
+      document.getElementById('insCp').onclick=async()=>{try{await navigator.clipboard.writeText(location.href.split('#')[0]);document.getElementById('insCp').textContent='Link copiado ✓'}catch(e){prompt('Copie o link:',location.href.split('#')[0])}};
       document.getElementById('insGo').onclick=async()=>{if(!pedido)return;pedido.prompt();let r=null;try{r=await pedido.userChoice}catch(e){}pedido=null;if(r&&r.outcome==='accepted')box.hidden=true;else document.getElementById('insGo').hidden=true};
     }
   }else if(inApp||notSafari){
